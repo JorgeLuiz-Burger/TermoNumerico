@@ -6,6 +6,7 @@ Termo numérico -
 # Inclusão de bibliotecas necessárias
 import random
 import os
+import colorama
 
 # Dicionário de símbolos usados
 correctPosition = 'C'
@@ -16,6 +17,10 @@ testMore = '?'
 # Informações importantes para o jogo
 maxIndex = 5
 guessNumber = []
+
+
+def installNecessaryModules():
+    os.system("pip install colorama >NUL")
 
 
 # Criando o número randomicamente
@@ -85,20 +90,21 @@ def testNumber(value):
                 else:
                     results[index] = NonPresent
 
+    # Possui caracter errado?
     error = ((NonPresent in results) or (WrongPosition in results))
 
-    txtShow = " --> "
+    # Mostrando o resultado na tela
+    print("--> ", end='')
     for index in range(0, maxIndex):
         if results[index] == correctPosition:
-            txtShow += ' ' + value[index] + ' '
-        elif results[index] == WrongPosition:
-            txtShow += '\'' + value[index] + ' '
-        elif results[index] == NonPresent:
-            txtShow += '.' + value[index] + ' '
+            print(colorama.Fore.GREEN + value[index] + ' ', end='')
 
-    txtShow += "\t\t( ) Acerto | (') Posição | (.) Erro"
-    # Mostrando o resultado na tela
-    print(f"\t{txtShow}\n")
+        elif results[index] == WrongPosition:
+            print(colorama.Fore.YELLOW + value[index] + ' ', end='')
+
+        elif results[index] == NonPresent:
+            print(colorama.Fore.RED + value[index] + ' ', end='')
+    print(" \n")
 
     # Retornando o erro ou acerto para a aplicação
     return error
@@ -156,14 +162,24 @@ def getUserTry():
 
 
 if __name__ == '__main__':
-    retry = 1
-    nTryes = 0
 
+    # Validando se é necessário instalar os módulos extras
+    if (0) or (os.path.exists('main.exe')):
+        installNecessaryModules()
+
+    # Permitindo a alteração de cores no terminal
+    colorama.init(autoreset=True)
+
+    # Jogo
+    retry = 1
     while (retry):
+        # Criando o número a ser adivinhado
         createNumber()
 
+        # Jogando os números no terminal
         getUserTry()
 
+        # Finalizou o jogo
         print("_" * len("Pressione 's' para jogar novamente."))
         txt = input("Pressione 's' para jogar novamente.")
         if (txt.lower() != 's'):
